@@ -1,28 +1,32 @@
 import os
 
 def criar_receita():
-    while True:
-        nome_receita = input("Digite o nome da receita (ou digite 'voltar' para retornar ao menu principal): ")
-        if nome_receita.lower() == 'voltar':
-            return
-        ingredientes = []
-        print("Digite os ingredientes (digite 'fim' para parar)")
-        while True:
-            ingrediente = input()
-            if ingrediente.lower() == "fim":
-                break
-            ingredientes.append(ingrediente)
-        modo_de_preparo = input("Digite o modo de preparo: ")
+    nome_receita = input("Digite o nome da receita (ou digite 'voltar' para retornar ao menu principal): ")
+    if nome_receita.lower() == 'voltar':
+        return
+    ingredientes = []
+    
+    def pedir_ingredientes():
+        ingrediente = input()
+        if ingrediente.lower() == "fim":
+            return ingredientes
+        ingredientes.append(ingrediente)
+        return pedir_ingredientes()
+    
+    print("Digite os ingredientes (digite 'fim' para parar)")
+    ingredientes = pedir_ingredientes()
+    modo_de_preparo = input("Digite o modo de preparo: ")
 
-        with open("receitas.txt", "a") as file:
-            file.write("Nome da Receita: {}\n".format(nome_receita))
-            file.write("Ingredientes:\n")
-            for ingrediente in ingredientes:
-                file.write("- {}\n".format(ingrediente))
-            file.write("Modo de preparo:\n")
-            file.write("{}\n".format(modo_de_preparo))
-            file.write("\n")
-        print("Receita '{}' criada com sucesso!".format(nome_receita))
+    with open("receitas.txt", "a") as file:
+        file.write("Nome da Receita: {}\n".format(nome_receita))
+        file.write("Ingredientes:\n")
+        for ingrediente in ingredientes:
+            file.write("- {}\n".format(ingrediente))
+        file.write("Modo de preparo:\n")
+        file.write("{}\n".format(modo_de_preparo))
+        file.write("\n")
+    print("Receita '{}' criada com sucesso!".format(nome_receita))
+    criar_receita()
 
 def listar_receitas():
     if not os.path.exists("receitas.txt"):
